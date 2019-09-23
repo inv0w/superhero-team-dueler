@@ -15,7 +15,9 @@ class Armor:
         self.max_block = max_block
 
     def block(self):
-        ''' Return a random value between 0 and the initialized max_block strength. '''
+        '''
+        Return a random value between 0 and the initialized max_block strength.
+        '''
         rand_block = random.randint(0, self.max_block)
         return rand_block
 
@@ -28,6 +30,9 @@ class Hero:
         self.armors = []
 
     def add_ability(self, ability):
+        '''
+        Adds all abilities to ability list.
+        '''
         self.abilities.append(ability)
 
     def attack(self):
@@ -78,7 +83,7 @@ class Hero:
         Current Hero will take turns fighting the opponent hero passed in.
         '''
         if (len(self.abilities) + len(opponent.abilities)) < 1:
-            return 'Draw'
+            print('Draw')
         else:
             while self.is_alive() and opponent.is_alive():
                 self.take_damage(opponent.attack())
