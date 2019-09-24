@@ -61,7 +61,7 @@ class Hero:
     def attack(self):
         '''
         Calculate the total damage from all ability attacks.
-          return: total:Int
+        return: total:Int
         '''
         total_damage = 0
         for ability in self.abilities:
@@ -109,15 +109,21 @@ class Hero:
                 self.take_damage(opponent.attack())
                 opponent.take_damage(self.attack())
             if self.is_alive():
-                print(f'{self.name} won the battle.')
+                print(f'{self.name} won a battle.')
                 self.add_kill(1)
                 opponent.add_deaths(1)
             else:
-                print(f'{opponent.name} won the battle.')
+                print(f'{opponent.name} won a battle.')
                 opponent.add_kill(1)
                 self.add_deaths(1)
         else:
             print('Draw')
+
+    def add_weapon(self, weapon):
+        '''
+        Add weapon to self.abilities
+        '''
+        self.abilities.append(weapon)
 
 class Team:
     def __init__(self, name):
@@ -126,11 +132,12 @@ class Team:
         '''
         self.name = name
         self.heroes = []
-        self.battle_roster = []
+        self.survivors = []
 
     def helper_kills(self):
         '''
-        Helper Functions to clean up code
+        Helper Functions to clean up code and check when someone has won.
+        (outdated)
         '''
         tot_kills = 0
         for hero in self.heroes:
@@ -167,6 +174,7 @@ class Team:
         Battle each team against each other.
         '''
         attacking = True
+        print('\n')
         while attacking:
             #Randomly assigns order for the heroes to battle
             team_hero = self.heroes[random.randint(0, (len(self.heroes))-1)]
@@ -177,11 +185,11 @@ class Team:
 
             #Checks if there are any heroes remaining in the heroes list
             if self.helper_kills() > (len(other_team.heroes)-1):
-                print(f'Team {self.name} has won!')
+                #print(f'{self.name} has won!')
                 attacking = False
                 break
             elif other_team.helper_kills() > (len(self.heroes)-1):
-                print(f'Team {other_team.name} has won!')
+                #print(f'{other_team.name} has won!')
                 attacking = False
                 break
             else:
@@ -198,29 +206,119 @@ class Team:
         '''
         Print team statistics
         '''
+        kdr = 0
+        total_kills = 0
+        total_deaths = 0
         for hero in self.heroes:
-            print(f'{hero.name} -- Kills: {hero.kills} Deaths: {hero.deaths}')
+            total_kills += hero.kills
+            total_deaths += hero.deaths
+        if total_deaths == 0:
+            kdr = float(total_kills)
+        else:
+            kdr = float(total_kills/total_deaths)
+        return kdr
+
+    def surviving_victors(self):
+        '''
+        Finds the surviving Heroes and prints them out.
+        '''
+        is_victor = False
+        for hero in self.heroes:
+            if hero.is_alive():
+                print(hero.name)
+                is_victor = True
+        if is_victor:
+            print(f'{self.name} has won the battle!')
+
+class Arena:
+    def __init__(self):
+        '''
+        Takes Heroes and adds them to their respective teams.
+        '''
+        self.team_one = Team("Team One")
+        self.team_two = Team("Team Two")
+
+    def create_ability(self):
+        '''
+        Prompt for Ability information.
+        return Ability with values from user Input
+        '''
+        name = input("Enter an Ability name: ")
+        max_damage = input("Enter the Ability's max power (number): ")
+        return Ability(name, int(max_damage))
+
+    def create_weapon(self):
+        '''
+        Prompt user for Weapon information
+        return Weapon with values from user input.
+        '''
+        name = input("Enter a Weapon name: ")
+        max_damage = input("Enter the Weapon's max power (number): ")
+        return Weapon(name, int(max_damage))
+
+    def create_armor(self):
+        '''
+        Prompt user for Armor information
+        return Armor with values from user input.
+        '''
+        name = input("Enter an Armor name: ")
+        max_block = input("Enter the Armor's max block (number): ")
+        return Armor(name, int(max_block))
+
+    def create_hero(self):
+        '''
+        Prompt user for Hero information
+        return Hero with values from user input.
+        '''
+        name = input("Enter a Hero name: ")
+        new_Hero = Hero(name, starting_health=100)
+        new_Hero.add_ability(self.create_ability())
+        new_Hero.add_weapon(self.create_weapon())
+        new_Hero.add_armor(self.create_armor())
+        return new_Hero
+
+    def build_team_one(self):
+        '''
+        Prompt the user to build team_one
+        '''
+        hero_amount = input("How many heroes do you want to make (number):  ")
+        for i in range(0, int(hero_amount)):
+            self.team_one.add_hero(self.create_hero())
+        pass
+
+    def build_team_two(self):
+        '''
+        Prompt the user to build team_two
+        '''
+        hero_amount = input("How many heroes do you want to make (number):  ")
+        for i in range(0, int(hero_amount)):
+            self.team_two.add_hero(self.create_hero())
+        pass
+
+    def team_battle(self):
+        '''
+        Battle team_one and team_two together.
+        '''
+        self.team_one.attack(self.team_two)
+
+    def show_stats(self):
+        '''
+        Prints team statistics and winner to terminal.
+        '''
+        #Shows Kills and Deaths, as well as ratio
+        print(f'Team One KDR: {self.team_one.stats()}')
+        print(f'Team Two KDR: {self.team_two.stats()}')
+
+        #Prints out any hero that has not been killed and determines the
+        #winner based off of that criteria
+        print('Surviving Heroes: ')
+        self.team_one.surviving_victors()
+        self.team_two.surviving_victors()
 
 
 if __name__ == '__main__':
-    team1 = Team('One')
-    team2 = Team('Two')
-    hero1 = Hero('Ghostie')
-    hero2 = Hero('Blademaster')
-    hero3 = Hero('Keanu')
-    hero4 = Hero("Chuck")
-    ability1 = Ability("Spookify", 90)
-    ability2 = Ability("Slice", 85)
-    ability3 = Ability("Dice", 70)
-    ability4 = Ability("Time Distort", 70)
-    ability5 = Ability("Karate Chop", 75)
-    hero1.add_ability(ability1)
-    hero2.add_ability(ability2)
-    hero2.add_ability(ability3)
-    hero3.add_ability(ability4)
-    hero4.add_ability(ability5)
-    team1.add_hero(hero1)
-    team1.add_hero(hero4)
-    team2.add_hero(hero2)
-    team2.add_hero(hero3)
-    team1.attack(team2)
+    arena = Arena()
+    arena.build_team_one()
+    arena.build_team_two()
+    arena.team_battle()
+    arena.show_stats()
