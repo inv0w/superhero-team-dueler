@@ -37,6 +37,20 @@ class Hero:
         self.current_health = starting_health
         self.abilities = []
         self.armors = []
+        self.deaths = 0
+        self.kills = 0
+
+    def add_kill(self, num_kills):
+        '''
+        Update kills with num_kills
+        '''
+        self.kills += num_kills
+
+    def add_deaths(self, num_deaths):
+        '''
+        Update deaths with num_deaths
+        '''
+        self.deaths += num_deaths
 
     def add_ability(self, ability):
         '''
@@ -61,8 +75,7 @@ class Hero:
         '''
         self.armors.append(armor)
 
-
-    def defend(self, incoming_damage):
+    def defend(self):
         '''
         Runs `block` method on each armor.
         Returns sum of all blocks
@@ -76,7 +89,7 @@ class Hero:
         '''
         Updates self.current_health to reflect the damage minus the defense.
         '''
-        self.current_health -= (damage - self.defend(damage))
+        self.current_health -= (damage - self.defend())
 
     def is_alive(self):
         '''
@@ -91,16 +104,20 @@ class Hero:
         '''
         Current Hero will take turns fighting the opponent hero passed in.
         '''
-        if (len(self.abilities) + len(opponent.abilities)) < 1:
-            print('Draw')
-        else:
+        if (len(self.abilities) + len(opponent.abilities)) > 0:
             while self.is_alive() and opponent.is_alive():
                 self.take_damage(opponent.attack())
                 opponent.take_damage(self.attack())
-        if self.is_alive():
-            print(f'{self.name} won!')
+            if self.is_alive():
+                print(f'{self.name} won the battle.')
+                self.add_kill(1)
+                opponent.add_deaths(1)
+            else:
+                print(f'{opponent.name} won the battle.')
+                opponent.add_kill(1)
+                self.add_deaths(1)
         else:
-            print(f'{opponent.name} won!')
+            print('Draw')
 
 class Team:
     def __init__(self, name):
@@ -109,13 +126,22 @@ class Team:
         '''
         self.name = name
         self.heroes = []
+        self.battle_roster = []
+
+    def helper_kills(self):
+        '''
+        Helper Functions to clean up code
+        '''
+        tot_kills = 0
+        for hero in self.heroes:
+            tot_kills += hero.kills
+        return tot_kills
 
     def remove_hero(self, name):
         '''
         Remove hero from heroes list.
         If Hero isn't found return 0.
         '''
-        # TODO: Implement this method to remove the hero from the list given their name.
         for hero in self.heroes:
             if name == hero.name:
                 self.heroes.remove(hero)
@@ -136,22 +162,67 @@ class Team:
         '''
         self.heroes.append(hero)
 
+    def attack(self, other_team):
+        '''
+        Battle each team against each other.
+        '''
+        attacking = True
+        self.battle_roster = self.heroes
+        other_team.battle_roster = other_team.heroes
 
-if __name__ == "__main__":
-    # If you run this file from the terminal
-    # this block is executed.
+        while attacking:
+            #Randomly assigns order for the heroes to battle
+            team_hero = self.battle_roster[random.randint(0, (len(self.battle_roster))-1)]
+            other_team_hero = other_team.battle_roster[random.randint(0, (len(other_team.battle_roster))-1)]
 
-    hero1 = Hero("Wonder Woman")
-    hero2 = Hero("Dumbledore")
-    hero3 = Hero("test")
-    weapon = Weapon("axe", 80)
-    print(weapon.attack())
-    ability1 = Ability("Super Speed", 300)
-    ability2 = Ability("Super Eyes", 130)
-    ability3 = Ability("Wizard Wand", 80)
-    ability4 = Ability("Wizard Beard", 20)
+            #Calls the heroes to fight
+            team_hero.fight(other_team_hero)
+            #Checks if there are any heroes remaining in the heroes list
+            if self.helper_kills() > (len(other_team.battle_roster)-1):
+                print(f'Team {self.name} has won!')
+                attacking = False
+                break
+            elif other_team.helper_kills() > (len(self.battle_roster)-1):
+                print(f'Team {other_team.name} has won!')
+                attacking = False
+                break
+            else:
+                pass
+
+    def revive_heroes(self):
+        '''
+        Reset all heroes health to starting_health
+        '''
+        for hero in self.heroes:
+            hero.current_health = hero.starting_health
+
+    def stats(self):
+        '''
+        Print team statistics
+        '''
+        for hero in self.heroes:
+            print(f'{hero.name} -- Kills: {hero.kills} Deaths: {hero.deaths}')
+
+
+if __name__ == '__main__':
+    team1 = Team('One')
+    team2 = Team('Two')
+    hero1 = Hero('Ghostie')
+    hero2 = Hero('Blademaster')
+    hero3 = Hero('Keanu')
+    hero4 = Hero("Chuck")
+    ability1 = Ability("Spookify", 90)
+    ability2 = Ability("Slice", 85)
+    ability3 = Ability("Dice", 70)
+    ability4 = Ability("Time Distort", 70)
+    ability5 = Ability("Karate Chop", 75)
     hero1.add_ability(ability1)
-    hero1.add_ability(ability2)
+    hero2.add_ability(ability2)
     hero2.add_ability(ability3)
-    hero2.add_ability(ability4)
-    hero1.fight(hero2)
+    hero3.add_ability(ability4)
+    hero4.add_ability(ability5)
+    team1.add_hero(hero1)
+    team1.add_hero(hero4)
+    team2.add_hero(hero2)
+    team2.add_hero(hero3)
+    team1.attack(team2)
