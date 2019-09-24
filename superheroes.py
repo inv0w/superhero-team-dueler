@@ -9,6 +9,15 @@ class Ability:
         rand_hit = random.randint(0, self.max_damage)
         return rand_hit
 
+class Weapon(Ability):
+    def attack(self):
+        '''
+        This method returns a random value
+        between one half to the full attack power of the weapon.
+        '''
+        rand_attack = random.randint((self.max_damage//2), self.max_damage)
+        return rand_attack
+
 class Armor:
     def __init__(self, name, max_block):
         self.name = name
@@ -93,12 +102,50 @@ class Hero:
         else:
             print(f'{opponent.name} won!')
 
+class Team:
+    def __init__(self, name):
+        '''
+        Initialize your team with its team name
+        '''
+        self.name = name
+        self.heroes = []
+
+    def remove_hero(self, name):
+        '''
+        Remove hero from heroes list.
+        If Hero isn't found return 0.
+        '''
+        # TODO: Implement this method to remove the hero from the list given their name.
+        for hero in self.heroes:
+            if name == hero.name:
+                self.heroes.remove(hero)
+            else:
+                pass
+        return 0
+
+    def view_all_heroes(self):
+        '''
+        Prints out all heroes to the console.
+        '''
+        for hero in self.heroes:
+            print(hero.name)
+
+    def add_hero(self, hero):
+        '''
+        Add Hero object to self.heroes.
+        '''
+        self.heroes.append(hero)
+
+
 if __name__ == "__main__":
     # If you run this file from the terminal
     # this block is executed.
 
     hero1 = Hero("Wonder Woman")
     hero2 = Hero("Dumbledore")
+    hero3 = Hero("test")
+    weapon = Weapon("axe", 80)
+    print(weapon.attack())
     ability1 = Ability("Super Speed", 300)
     ability2 = Ability("Super Eyes", 130)
     ability3 = Ability("Wizard Wand", 80)
