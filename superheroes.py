@@ -228,7 +228,7 @@ class Team:
                 print(hero.name)
                 is_victor = True
         if is_victor:
-            print(f'{self.name} has won the battle!')
+            print(f'{self.name} has won the attack!')
 
 class Arena:
     def __init__(self):
