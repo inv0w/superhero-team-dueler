@@ -167,22 +167,20 @@ class Team:
         Battle each team against each other.
         '''
         attacking = True
-        self.battle_roster = self.heroes
-        other_team.battle_roster = other_team.heroes
-
         while attacking:
             #Randomly assigns order for the heroes to battle
-            team_hero = self.battle_roster[random.randint(0, (len(self.battle_roster))-1)]
-            other_team_hero = other_team.battle_roster[random.randint(0, (len(other_team.battle_roster))-1)]
+            team_hero = self.heroes[random.randint(0, (len(self.heroes))-1)]
+            other_team_hero = other_team.heroes[random.randint(0, (len(other_team.heroes))-1)]
 
             #Calls the heroes to fight
             team_hero.fight(other_team_hero)
+
             #Checks if there are any heroes remaining in the heroes list
-            if self.helper_kills() > (len(other_team.battle_roster)-1):
+            if self.helper_kills() > (len(other_team.heroes)-1):
                 print(f'Team {self.name} has won!')
                 attacking = False
                 break
-            elif other_team.helper_kills() > (len(self.battle_roster)-1):
+            elif other_team.helper_kills() > (len(self.heroes)-1):
                 print(f'Team {other_team.name} has won!')
                 attacking = False
                 break
