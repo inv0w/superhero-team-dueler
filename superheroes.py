@@ -89,7 +89,7 @@ class Hero:
         '''
         Updates self.current_health to reflect the damage minus the defense.
         '''
-        self.current_health -= (damage - self.defend())
+        self.current_health -= max(0, damage - self.defend())
 
     def is_alive(self):
         '''
@@ -213,9 +213,9 @@ class Team:
             total_kills += hero.kills
             total_deaths += hero.deaths
         if total_deaths == 0:
-            kdr = float(total_kills)
+            kdr = total_kills
         else:
-            kdr = float(total_kills/total_deaths)
+            kdr = total_kills/total_deaths
         return kdr
 
     def surviving_victors(self):
