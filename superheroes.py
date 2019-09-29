@@ -243,6 +243,7 @@ class Team:
                     second_team.append(hero)
 
             #Checks if there are any heroes remaining in the heroes list
+            #Chooses heroes from the lists and fights if there are.
             if len(first_team) == 0:
                 if len(second_team) == 0:
                     print('Its a draw!')
