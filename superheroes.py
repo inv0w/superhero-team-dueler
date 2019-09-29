@@ -248,20 +248,16 @@ class Team:
                 if len(second_team) == 0:
                     print('Its a draw!')
                     attacking = False
-                    break
                 else:
                     print(f'{other_team.name} has won!')
                     attacking = False
-                    break
             elif len(second_team) == 0:
                 if len(first_team) == 0:
                     print('Its a draw!')
                     attacking = False
-                    break
                 else:
                     print(f'{self.name} has won!')
                     attacking = False
-                    break
             else:
                 #Calls the heroes to fight
                 first_hero = random.choice(first_team)
