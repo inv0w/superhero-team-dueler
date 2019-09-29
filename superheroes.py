@@ -128,7 +128,7 @@ class Hero:
         damage:int
         '''
 
-        self.current_health -= max(0, damage - self.defend())
+        self.current_health -= (damage - self.defend())
 
     def is_alive(self):
         '''
