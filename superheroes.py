@@ -156,10 +156,16 @@ class Hero:
                 print(f'{self.name} won a battle.')
                 self.add_kill(1)
                 opponent.add_deaths(1)
-            else:
+            elif opponent.is_alive():
                 print(f'{opponent.name} won a battle.')
                 opponent.add_kill(1)
                 self.add_deaths(1)
+            else:
+                print(f'{self.name} and {opponent.name} drew the battle')
+                self.add_deaths(1)
+                self.add_kill(1)
+                opponent.add_kill(1)
+                opponent.add_deaths(1)
         else:
             print('Draw')
 
@@ -182,15 +188,6 @@ class Team:
     def __init__(self, name):
         self.name = name
         self.heroes = []
-        self.survivors = []
-
-    def helper_kills(self):
-        '''Helper Functions to clean up code and check when someone has won.'''
-
-        tot_kills = 0
-        for hero in self.heroes:
-            tot_kills += hero.kills
-        return tot_kills
 
     def remove_hero(self, name):
         '''
@@ -235,24 +232,40 @@ class Team:
         attacking = True
         print('\n')
         while attacking:
-            #Randomly assigns order for the heroes to battle
-            team_hero = self.heroes[random.randint(0, (len(self.heroes))-1)]
-            other_team_hero = other_team.heroes[random.randint(0, (len(other_team.heroes))-1)]
-
-            #Calls the heroes to fight
-            team_hero.fight(other_team_hero)
+            #Assigns heroes to different list to battle
+            first_team = []
+            second_team = []
+            for hero in self.heroes:
+                if hero.is_alive():
+                    first_team.append(hero)
+            for hero in other_team.heroes:
+                if hero.is_alive():
+                    second_team.append(hero)
 
             #Checks if there are any heroes remaining in the heroes list
-            if self.helper_kills() > (len(other_team.heroes)-1):
-                #print(f'{self.name} has won!')
-                attacking = False
-                break
-            elif other_team.helper_kills() > (len(self.heroes)-1):
-                #print(f'{other_team.name} has won!')
-                attacking = False
-                break
+            if len(first_team) == 0:
+                if len(second_team) == 0:
+                    print('Its a draw!')
+                    attacking = False
+                    break
+                else:
+                    print(f'{other_team.name} has won!')
+                    attacking = False
+                    break
+            elif len(second_team) == 0:
+                if len(first_team) == 0:
+                    print('Its a draw!')
+                    attacking = False
+                    break
+                else:
+                    print(f'{self.name} has won!')
+                    attacking = False
+                    break
             else:
-                pass
+                #Calls the heroes to fight
+                first_hero = random.choice(first_team)
+                second_hero = random.choice(second_team)
+                first_hero.fight(second_hero)
 
     def revive_heroes(self):
         '''Reset all heroes health to starting_health in heroes list.'''
@@ -285,13 +298,9 @@ class Team:
         that team has won.
         '''
 
-        is_victor = False
         for hero in self.heroes:
             if hero.is_alive():
                 print(hero.name)
-                is_victor = True
-        if is_victor:
-            print(f'{self.name} has won the attack!')
 
 class Arena:
     '''
@@ -303,9 +312,9 @@ class Arena:
     '''
 
     def __init__(self):
-
         self.team_one = Team("Team One")
         self.team_two = Team("Team Two")
+        self.battles = 0
 
     def create_ability(self):
         '''Prompts user for information to create ability values then returns it.'''
