@@ -311,7 +311,6 @@ class Arena:
     def __init__(self):
         self.team_one = Team("Team One")
         self.team_two = Team("Team Two")
-        self.battles = 0
 
     def create_ability(self):
         '''Prompts user for information to create ability values then returns it.'''
