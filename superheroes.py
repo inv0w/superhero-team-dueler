@@ -1,8 +1,7 @@
 import random
 
 class Ability:
-    '''
-    An ability is an action that has a damage value.
+    '''An ability is an action that has a damage value.
 
     name: str
     max_damage: int
@@ -22,8 +21,7 @@ class Weapon(Ability):
     '''Weapon extends Ability'''
 
     def attack(self):
-        '''
-        This method overrides Ability.attack() and returns a random value
+        '''This method overrides Ability.attack() and returns a random value
         between one half to the full attack power of the weapon.
         '''
 
@@ -31,8 +29,7 @@ class Weapon(Ability):
         return rand_attack
 
 class Armor:
-    '''
-    Armor is an action that returns a block value
+    '''Armor is an action that returns a block value
 
     name: str
     max_block: int
@@ -49,8 +46,7 @@ class Armor:
         return rand_block
 
 class Hero:
-    '''
-    Hero takes in abilities and armors and can use those values to attack
+    '''Hero takes in abilities and armors and can use those values to attack
     other heroes.
 
     name: str
@@ -67,8 +63,7 @@ class Hero:
         self.kills = 0
 
     def add_kill(self, num_kills):
-        '''
-        Update kills with num_kills.
+        '''Update kills with num_kills.
 
         num_kills: int
         '''
@@ -76,8 +71,7 @@ class Hero:
         self.kills += num_kills
 
     def add_deaths(self, num_deaths):
-        '''
-        Update deaths with num_deaths.
+        '''Update deaths with num_deaths.
 
         num_deaths: int
         '''
@@ -85,8 +79,7 @@ class Hero:
         self.deaths += num_deaths
 
     def add_ability(self, ability):
-        '''
-        Adds all abilities to ability list.
+        '''Adds all abilities to ability list.
 
         ability: Ability Object
         '''
@@ -102,8 +95,7 @@ class Hero:
         return total_damage
 
     def add_armor(self, armor):
-        '''
-        Adds armor to self.armors
+        '''Adds armor to self.armors
 
         armor: Armor Object
         '''
@@ -111,8 +103,7 @@ class Hero:
         self.armors.append(armor)
 
     def defend(self):
-        '''
-        Runs `block` method on each armor.
+        '''Runs `block` method on each armor.
         Returns sum of all blocks.
         '''
 
@@ -122,8 +113,7 @@ class Hero:
         return total_blocked
 
     def take_damage(self, damage):
-        '''
-        Updates self.current_health to reflect the damage minus the defense.
+        '''Updates self.current_health to reflect the damage minus the defense.
 
         damage:int
         '''
@@ -131,15 +121,13 @@ class Hero:
         self.current_health -= (damage - self.defend())
 
     def is_alive(self):
-        '''
-        Return True or False depending on whether the hero is alive or not.
+        '''Return True or False depending on whether the hero is alive or not.
         '''
 
         return self.current_health > 0
 
     def fight(self, opponent):
-        '''
-        Heroes fight by attacking each other and taking damage.
+        '''Heroes fight by attacking each other and taking damage.
         Exits loop if either one of their health reaches 0.
         Returns draw if there are no abilities in the Hero object
 
@@ -170,8 +158,7 @@ class Hero:
             print('Draw')
 
     def add_weapon(self, weapon):
-        '''
-        Adds weapon to self.abilities
+        '''Adds weapon to self.abilities
 
         weapon: Weapon object
         '''
@@ -179,8 +166,7 @@ class Hero:
         self.abilities.append(weapon)
 
 class Team:
-    '''
-    Initialize your team with its team name, and takes in lists of hero objects.
+    '''Initialize your team with its team name, and takes in lists of hero objects.
 
     name: str
     '''
@@ -190,8 +176,7 @@ class Team:
         self.heroes = []
 
     def remove_hero(self, name):
-        '''
-        Remove hero from heroes list. If Hero isn't found return 0.
+        '''Remove hero from heroes list. If Hero isn't found return 0.
 
         name: str
         '''
@@ -210,8 +195,7 @@ class Team:
             print(hero.name)
 
     def add_hero(self, hero):
-        '''
-        Add Hero object to self.heroes
+        '''Add Hero object to self.heroes
 
         hero: Hero Object
         '''
@@ -219,8 +203,7 @@ class Team:
         self.heroes.append(hero)
 
     def attack(self, other_team):
-        '''
-        Battle each team against each other. Selects a hero randomly from each
+        '''Battle each team against each other. Selects a hero randomly from each
         team's list of heroes and battles them against each other.
 
         Loop ends when one team's kills totals the amount of heroes in the other
@@ -271,8 +254,7 @@ class Team:
             hero.current_health = hero.starting_health
 
     def stats(self):
-        '''
-        Prints team statistics by taking in each heroe's kill and death count.
+        '''Prints team statistics by taking in each heroe's kill and death count.
         Then calculates the KDR based off of those values.
         '''
 
@@ -300,8 +282,7 @@ class Team:
                 print(hero.name)
 
 class Arena:
-    '''
-    Uses Team objects to 'battle' against each other. Also creates functions
+    '''Uses Team objects to 'battle' against each other. Also creates functions
     that allow for user inputs to create their own abilities, weapons, armors
     and heroes.
 
@@ -334,8 +315,7 @@ class Arena:
         return Armor(name, int(max_block))
 
     def create_hero(self):
-        '''
-        Prompts user to give a name for Hero. Then uses the other values from
+        '''Prompts user to give a name for Hero. Then uses the other values from
         ability, weapon, and armor to add to the new Hero created and returns the hero.
         '''
 
@@ -347,8 +327,7 @@ class Arena:
         return new_Hero
 
     def build_team_one(self):
-        '''
-        Prompts the user for how many heroes they want in their Team.
+        '''Prompts the user for how many heroes they want in their Team.
         For the amount given, calls the create_hero function to create hero objects
         and adds them to the team.
         '''
@@ -359,8 +338,7 @@ class Arena:
         pass
 
     def build_team_two(self):
-        '''
-        Prompts the user for how many heroes they want in their Team.
+        '''Prompts the user for how many heroes they want in their Team.
         For the amount given, calls the create_hero function to create hero objects
         and adds them to the team.
         '''
